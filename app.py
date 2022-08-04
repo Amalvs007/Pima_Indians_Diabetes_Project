@@ -33,7 +33,19 @@ def predict():
 
     print(rowDF_new)
 
-    return render_template('index.html')
+    # Model Prediction
+    prediction = model.predict_proba(rowDF_new)
+    print(f"The predicted value is : {prediction[0][1]}")
+
+    if prediction[0][1] >= 0.5:
+        valPred = round(prediction[0][1],3)
+        print(f"The Round Value : {valPred*100}%")
+        return render_template('result.html',pred=f'You have a chance of having Diabetes. \n\nProbability of you being a Diabetic is {valPred*100:.2f}%. \n\nAdvice : Exercise Regularly')
+    else:
+        valPred = round(prediction[0][0],3)
+        print(f"The Round Value : {valPred*100}%")
+        return render_template('result.html',pred=f'Congratulations!!!, You are in a SAFE ZONE. \n\nProbability of you being a NON-Diabetic is {valPred*100:.2f}%. \n\nAdvice : Exercise Regularly and Maintain like this..!')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
